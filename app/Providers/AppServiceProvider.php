@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // Every Single View
-//        View::share('tagFilters',Tag::orderBy('tag_name')->get());
-//        View::share('catFilters',Category::orderBy('cat_name')->get());
+        View::share('tagFilters',Tag::orderBy('tag_name')->get());
+        View::share('catFilters',Category::orderBy('cat_name')->get());
     }
 }
