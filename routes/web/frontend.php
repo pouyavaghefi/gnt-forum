@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Redis;
 */
 
 Route::get('/', 'HomeController@index')->name('home.index');
-Route::get('/profile', 'ProfileController@show')->name('profile.show');
 
 Route::get('/get-back', 'ToolsController@get_back_to_prev')->name('get.back');
 Route::get('/new-question-exists', 'ToolsController@count_questions');
@@ -24,7 +23,7 @@ Route::get('/test1', 'TestController@setQuestionCats');
 Route::get('/test2', 'TestController@setQuestionTats');
 
 Route::prefix('questions')->group(function () {
-    Route::get('/{question}', 'QuestionController@show')->middleware('auth')->name('question.show');
+    Route::get('/{question}', 'QuestionController@show')->name('question.show');
     Route::middleware('auth')->group(function () {
         Route::post('/{question}/submitAnswer', 'AnswerController@submitAnswer')->name('answer.submit');
         Route::get('/ask/new', 'QuestionController@ask')->name('question.new');
@@ -41,6 +40,12 @@ Route::prefix('tags')->group(function () {
 Route::prefix('cats')->group(function () {
     Route::get('/', 'CategoryController@all')->name('cat.index');
     Route::get('/{cat}', 'CategoryController@cat')->name('cat.single');
+});
+
+Route::middleware('auth')->group(function () {
+	Route::post('changeAccountInfo', 'AccountController@change')->name('changeAccInfo');
+	Route::get('/profile', 'ProfileController@show')->name('profile.show');
+	Route::get('/account', 'AccountController@show')->name('account.settings');
 });
 
 Route::get('/optimize-clear', 'ToolsController@web_refresh');

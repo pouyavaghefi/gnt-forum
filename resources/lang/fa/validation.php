@@ -187,5 +187,7 @@ return [
 		"tags" => "برچسب ها",
 		"tag" => "برچسب",
 		"token" => "توکن",
+		"current_password" => "رمزعبور فعلی",
+		"password_confirmation" => "تاییدیه رمزعبور",
     ],
 ];
