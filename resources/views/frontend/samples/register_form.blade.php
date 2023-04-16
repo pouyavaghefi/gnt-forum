@@ -63,7 +63,7 @@
     <div class="row" style="margin-left:50px" dir="ltr">
         @foreach(range(0,5) as $i)
             <div class="col-2">
-                <img src="{{ asset("storage/dist/captcha/".$ip."/".$i."captcha.png") }}">
+                <img src="{{ asset("/storage/captcha/".$ip."/".$i."captcha.png") }}">
             </div>
         @endforeach
     </div></br>

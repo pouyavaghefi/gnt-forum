@@ -3,6 +3,7 @@
 namespace App\Http\HelperClasses;
 
 use DB;
+use Illuminate\Support\Facades\Log;
 use Storage;
 use File;
 
@@ -13,7 +14,7 @@ class Captcha
         $phrase = strtoupper(bin2hex(random_bytes(3)));
         $ip = \Request::ip();
 
-        $path = 'dist/captcha/'.$ip;
+        $path = 'public/captcha/'.$ip;
         if(!Storage::exists($path))
             Storage::makeDirectory($path);
 
