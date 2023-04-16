@@ -2,6 +2,9 @@
 <html lang="en-US">
 <head>
     @include('frontend.layouts.partials.head')
+	<style>
+
+	</style>
     @yield('styles')
 </head>
 <body>
@@ -9,7 +12,9 @@
     @include('frontend.layouts.header')
 
     <!-- MAIN -->
+	<div class="customBg">
     @yield('main')
+	</div>
 
     <!-- FOOTER -->
     @include('frontend.layouts.footer')

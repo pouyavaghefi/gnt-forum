@@ -13,6 +13,7 @@ use App\Models\Tag;
 use App\Models\Vote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Auth;
 use Cookie;
 use DB;
 use Session;
@@ -122,67 +123,71 @@ class QuestionController extends Controller
 
     public function show(Question $question)
     {
-        $newtime = strtotime($question->created_at);
+		if(Auth::check()){
+			$newtime = strtotime($question->created_at);
 
-        if(Cookie::get($question->id) != ''){
-            Cookie::set('$question->id', '1', 60);
-            Redis::incr("views.{$question->id}.questions");
-            $question->increment('que_view_count');
-        }
+			if(Cookie::get($question->id) != ''){
+				Cookie::set('$question->id', '1', 60);
+				Redis::incr("views.{$question->id}.questions");
+				$question->increment('que_view_count');
+			}
 
-        if(Session::has('message')){
-            $this->flashed->success('ثبت شد',Session::get('message'));
-        }
+			if(Session::has('message')){
+				$this->flashed->success('ثبت شد',Session::get('message'));
+			}
 
-        $selectedCats = [];
-        foreach($question->categories as $category) {
-            $similarCats = CategoryQuestion::where('category_id', $category->id)->get();
+			$selectedCats = [];
+			foreach($question->categories as $category) {
+				$similarCats = CategoryQuestion::where('category_id', $category->id)->get();
 
-            foreach($similarCats as $similarc){
-                array_push($selectedCats,$similarc);
-            }
-        }
+				foreach($similarCats as $similarc){
+					array_push($selectedCats,$similarc);
+				}
+			}
 
-        $selectedTags = [];
-        foreach($question->tags as $tag) {
-            $similarTags = QuestionTag::where('tag_id', $tag->id)->get();
+			$selectedTags = [];
+			foreach($question->tags as $tag) {
+				$similarTags = QuestionTag::where('tag_id', $tag->id)->get();
 
-            foreach($similarTags as $similart){
-                array_push($selectedTags,$similart);
-            }
-        }
+				foreach($similarTags as $similart){
+					array_push($selectedTags,$similart);
+				}
+			}
 
-        $selectedAll = array_merge($selectedCats,$selectedTags);
+			$selectedAll = array_merge($selectedCats,$selectedTags);
 
-        $ques = [];
-        foreach($selectedAll as $selected){
-            $que = Question::find($selected->question_id);
-            array_push($ques,$que);
-        }
+			$ques = [];
+			foreach($selectedAll as $selected){
+				$que = Question::find($selected->question_id);
+				array_push($ques,$que);
+			}
 
-        if(count($ques) > 5) {
-            for ($i = count($ques); $i > 5; $i--) {
-                unset($ques[$i-1]);
-            }
-        }
+			if(count($ques) > 5) {
+				for ($i = count($ques); $i > 5; $i--) {
+					unset($ques[$i-1]);
+				}
+			}
 
-        $answers = Answer::where('ans_que_id',$question->id)->get();
+			$answers = Answer::where('ans_que_id',$question->id)->get();
 
-        $userVotedAns = [];
-        foreach($answers as $answer){
-            $userVoted = Vote::where('user_id',auth()->user()->id)->where('object_id',$answer->id)->where('object_type',17)->first();
-            if($userVoted){
-                array_push($userVotedAns,$answer->id);
-            }else{
-                continue;
-            }
-        }
+			$userVotedAns = [];
+			foreach($answers as $answer){
+				$userVoted = Vote::where('user_id',auth()->user()->id)->where('object_id',$answer->id)->where('object_type',17)->first();
+				if($userVoted){
+					array_push($userVotedAns,$answer->id);
+				}else{
+					continue;
+				}
+			}
 
-        $userVotedQue = Vote::where('user_id',auth()->user()->id)->where('object_id',$question->id)->first();
+			$userVotedQue = Vote::where('user_id',auth()->user()->id)->where('object_id',$question->id)->first();
 
-        $question->que_view_count += 1;
-        $question->save();
-
-        return view('frontend.question.show',compact('userVotedAns','userVotedQue','question','ques','newtime','answers'));
+			$question->que_view_count += 1;
+			$question->save();
+			
+			return view('frontend.question.show',compact('userVotedAns','userVotedQue','question','ques','newtime','answers'));
+		}else{
+			return view('frontend.auth.notloggedin');
+		}
     }
 }
