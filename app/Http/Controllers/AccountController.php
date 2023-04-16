@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Validator;
+use Auth;
+use Hash;
 
 class AccountController extends Controller
 {
@@ -24,8 +26,16 @@ class AccountController extends Controller
 			return redirect()->back()->withErrors($validator);
 		}
 
-		// logic to update the user's password
+		$user = Auth::user();
 
-		return redirect()->back()->with('success', 'رمز عبور با موفقیت به روز رسانی شد.');
+        if (!Hash::check($request->input('current_password'), $user->usr_password_hash)) {
+            return redirect()->back()->withErrors(['current_password' => 'رمز عبور وارد شده با رمز عبور واقعی شما مطابقت ندارد']);
+        }
+
+        $user->update([
+            'usr_password_hash' => Hash::make($request->input('password')),
+        ]);
+
+        return redirect()->back()->with('success', 'رمز عبور با موفقیت به روز رسانی شد.');
 	}
 }
