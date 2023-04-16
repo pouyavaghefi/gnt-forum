@@ -90,7 +90,7 @@
 
         document.getElementById("username").addEventListener("keyup", function(e) {
             if (/^[a-zA-Z]+$/.test(this.value)) {
-
+				
             }else{
                 if($("#username").val() != "") {
                     document.getElementById("username").value = "";
@@ -166,7 +166,7 @@
                 document.getElementById("usernamestatus").innerHTML = '...در حال بررسی';
                 $.ajax({
                     type:'get',
-                    url: baseurl + '/auth/checkUserNameExists',
+                    url: baseurl + 'auth/checkUserNameExists',
                     data:{'uname':e},
                     success:function(data){
                         if(Object.keys(data).length === 0)

@@ -28,24 +28,26 @@
     <script>
         notifcount = 0;
         $(document).ready(function() {
-            setInterval(function() {
-                $.ajax({
-                    // change this URL to your path to the laravel function
-                    url: 'new-notifications-exists',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        // if notifz count is 0, then set its initial value to notifz count
-                        if(notifcount == 0){
-                            notifcount = response.notifcount;
-                        }
-                        if(response.notifcount > notifcount){
-                            notifcount = response.notifcount;
-                            new_notif_found();
-                        }
-                    }
-                });
-            }, 1000);
+            if(window.location.href === 'https://gooyanet.com/'){
+				setInterval(function() {
+					$.ajax({
+						// change this URL to your path to the laravel function
+						url: 'new-notifications-exists',
+						method: 'GET',
+						dataType: 'json',
+						success: function(response) {
+							// if notifz count is 0, then set its initial value to notifz count
+							if(notifcount == 0){
+								notifcount = response.notifcount;
+							}
+							if(response.notifcount > notifcount){
+								notifcount = response.notifcount;
+								new_notif_found();
+							}
+						}
+					});
+				}, 1000);
+			}
         });
         function new_notif_found(){
             $('#unreads').hide();

@@ -49,3 +49,4 @@ Route::get('/mark-all-unread-notifications', 'NotificationController')->middlewa
 Route::post('/mark-as-best-answer/{queCreatorId}/{ansId}/{queId}/{ansCreatorId}', 'BestController')->middleware('auth')->name('answer.markAsBest');
 
 
+
